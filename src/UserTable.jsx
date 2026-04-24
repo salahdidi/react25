@@ -16,7 +16,8 @@ function UserTable({ users ,deleteUser}) {
             </thead>
             <tbody>
                 {users.map((user) => (
-                    <UserRow key={user.id} user={user} deleteUser={deleteUser} />
+                    <UserRow  
+                      key={user.id} user={user} deleteUser={deleteUser} />
                 ))}
             </tbody>
         </table>

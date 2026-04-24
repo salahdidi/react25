@@ -4,6 +4,7 @@ import Pagination from '../Pagination';
 import Searsh from '../Searsh';
 import LoadingSpinner from '../LoadingSpinner';
 import OpsError from '../OpsError';
+import { useTheme } from '../context/ThemeContext';
 
 const USERS_PER_PAGE = 5;
 
@@ -13,6 +14,7 @@ function UserPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const {styles,toggleTheme} = useTheme();
 
   // Fetch users once on mount 
   useEffect(() => {
@@ -64,7 +66,7 @@ function UserPage() {
 
   return (
     <div style={{ padding: '24px' }}>
-      <h2>User List ({filteredUsers.length} users)</h2>
+      <h2 style={{ color: styles.Textcolor }}>User List ({filteredUsers.length} users)</h2>
 
       <Searsh search={search} setSearch={searshdata} filtredCount={filteredUsers.length} usersCount={users.length}
         setCurrentPage={setCurrentPage} />
@@ -75,8 +77,9 @@ function UserPage() {
         ? <p style={{ padding: '32px', textAlign: 'center', color: '#999', fontSize: '16px' }}>No users match your search</p>
         : <UserTable users={pageUsers} deleteUser={deleteUser} />
       }
+      
       <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
-
+       
     </div>
   );
 }
