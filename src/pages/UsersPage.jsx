@@ -5,6 +5,8 @@ import Searsh from '../Searsh';
 import LoadingSpinner from '../LoadingSpinner';
 import OpsError from '../OpsError';
 import { useTheme } from '../context/ThemeContext';
+import ConfirmModal from '../components/ConfirmModal';
+import { useNotification } from '../context/NotificationContext';
 
 const USERS_PER_PAGE = 5;
 
@@ -15,6 +17,9 @@ function UserPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const {styles,toggleTheme} = useTheme();
+  const [userToDelete, setUserToDelete] = useState(null); 
+
+   const { showToast } = useNotification(); 
 
   // Fetch users once on mount 
   useEffect(() => {
@@ -64,6 +69,27 @@ function UserPage() {
   // Step 3: slice the filtered array 
   const pageUsers = filteredUsers.slice(startIndex, endIndex);
 
+   // Step 1: user clicks Delete — show modal 
+  const handleDeleteRequest = (id) => { 
+    const user = users.find((u) => u.id === id); 
+    setUserToDelete(user); // opens the modal 
+  }; 
+ 
+  // Step 2: user clicks Confirm in modal — actually delete 
+   // After confirming delete: 
+  const handleDeleteConfirm = (id) => { 
+    const deleted = users.find((u) => u.id === id); 
+    setUsers((prev) => prev.filter((u) => u.id !== id)); 
+    setUserToDelete(null); 
+    setCurrentPage(1); 
+    showToast(`${deleted.name} was deleted.`, 'success'); // new 
+  }; 
+ 
+  // Step 3: user clicks Cancel — close modal, do nothing 
+  const handleDeleteCancel = () => { 
+    setUserToDelete(null); 
+  }; 
+
   return (
     <div style={{ padding: '24px' }}>
       <h2 style={{ color: styles.Textcolor }}>User List ({filteredUsers.length} users)</h2>
@@ -75,11 +101,15 @@ function UserPage() {
         : error ? <OpsError message={error} />
           : filteredUsers.length === 0
         ? <p style={{ padding: '32px', textAlign: 'center', color: '#999', fontSize: '16px' }}>No users match your search</p>
-        : <UserTable users={pageUsers} deleteUser={deleteUser} />
+        : <UserTable users={pageUsers} deleteUser={handleDeleteRequest} />
       }
       
       <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} />
-       
+        <ConfirmModal 
+                user={userToDelete} 
+        onConfirm={handleDeleteConfirm} 
+        onCancel={handleDeleteCancel} 
+        /> 
     </div>
   );
 }

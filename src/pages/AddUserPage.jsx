@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
 import InputFinance from '../components/InputFinance';
+import { useNotification } from '../context/NotificationContext';
 
 function AddUserPage({ onAddUser }) {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ function AddUserPage({ onAddUser }) {
     const [lengthNin, setLengthNin] = useState(0);
     const [role, setRole] = useState('Viewer');
     const [errors, setErrors] = useState({});
+     const { showToast } = useNotification(); 
 
     const validate = () => {
         const errs = {};
@@ -19,7 +21,7 @@ function AddUserPage({ onAddUser }) {
         if (!email.trim()) errs.email = 'Email is required';
         else if (!email.includes('@'))
             errs.email = 'Enter a valid email address';
-        if (nin.length != 19) errs.nin = 'NIN must be exactly 19 characters';
+      
         return errs;
     };
 
@@ -30,6 +32,7 @@ function AddUserPage({ onAddUser }) {
 
         const newUser = { id: Date.now(), name, email, nin, role };
         onAddUser(newUser);   // add to the users list in App 
+        showToast(`${name} was added successfully!`, 'success'); // new 
         navigate('/users');   // redirect back to the table 
     };
 
@@ -77,9 +80,7 @@ function AddUserPage({ onAddUser }) {
                 <div style={{ marginBottom: '24px' }}>
                     <InputFinance label='National ID Number (NIN)' value={nin} length={19} setErrors={setErrors} errors={errors} onChange={(val) => { setNin(val); setLengthNin(val.length); }} />
                 </div>
-                <div style={{ marginBottom: '24px' }}>
-                    <InputFinance label='NIF ()' value={nin} length={25} setErrors={setErrors} errors={errors} onChange={(val) => { setNin(val); setLengthNin(val.length); }} />
-                </div>
+                 
                 <div style={{ marginBottom: '24px' }}>
                     <label>Role</label>
                     <select

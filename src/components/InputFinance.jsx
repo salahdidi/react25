@@ -24,7 +24,6 @@ const validate = () => {
                 onChange={(e) => { onChange(e.target.value); validate(); }}
                 placeholder={label}
                 style={inputStyle('nin')}
-                disabled={lengthNin >= length} // disable if length is reached and there's no error
             />
             <span style={{ fontSize: '12px', color: '#666' }}>{lengthNin}/{length} characters</span>
             {errors.nin && <span style={{
