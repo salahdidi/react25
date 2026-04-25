@@ -28,6 +28,10 @@ function NavBar() {
                 <Link to='/users' style={{
                     color: 'white', textDecoration: 'none'
                 }}>Users</Link>
+                <Link to='/add-user' style={{ color: 'white', marginLeft: '16px', textDecoration: 
+                'none' }}> 
+                + Add User 
+                </Link> 
             </div >
             <button
                 onClick={toggleTheme}
